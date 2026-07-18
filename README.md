@@ -24,3 +24,25 @@ Las pruebas se ejecutan sobre la aplicación web Demoblaze.
 
 ## Versión de Node.js
     v20.19.3
+
+## Evidencias de ejecución
+
+### Ejecución de los tests
+
+![Ejecución correcta de los tres tests](docs/evidencias/foto1.png)
+
+### Reporte general de Playwright
+
+![Reporte general de Playwright](docs/evidencias/foto2.png)
+
+### Prueba de carga de la página
+
+![Prueba de carga de la página](docs/evidencias/foto3.png)
+
+### Prueba del menú de categorías
+
+![Prueba del menú de categorías](docs/evidencias/foto4.png)
+
+### Prueba de la barra de navegación
+
+![Prueba de la barra de navegación](docs/evidencias/foto5.png)
