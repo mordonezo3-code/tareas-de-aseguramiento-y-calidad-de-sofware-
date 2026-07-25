@@ -3,8 +3,8 @@ import * as fs from 'fs';
 
 // Crear la carpeta de evidencias si no existe
 test.beforeAll(async () => {
-    if (!fs.existsSync('evidencias')) {
-        fs.mkdirSync('evidencias');
+    if (!fs.existsSync('./evidencias')) {
+        fs.mkdirSync('./evidencias', { recursive: true });
     }
 });
 
@@ -21,11 +21,12 @@ test.describe('Pruebas de la Clase 02 - Navegación y Esperas en Demoblaze', () 
             fullPage: true
         });
 
-        await page.getByText('Cart').click();
+        // Playwright espera automáticamente a que el enlace esté disponible
+        await page.getByText('Cart', { exact: true }).click();
 
         await page.waitForURL('**/cart.html');
 
-        await expect(page).toHaveURL(/cart/);
+        await expect(page).toHaveURL(/cart\.html/);
 
         await page.screenshot({
             path: './evidencias/02-carrito-vacio.png',
@@ -41,43 +42,54 @@ test.describe('Pruebas de la Clase 02 - Navegación y Esperas en Demoblaze', () 
 
         await page.goto('https://www.demoblaze.com/');
 
-        await page.getByText('Phones').click();
-
-        await page.waitForSelector('.card-title a');
+        await page.getByText('Phones', { exact: true }).click();
 
         const productos = page.locator('.card-title a');
 
-        expect(await productos.count()).toBeGreaterThan(0);
+        await expect(productos.first()).toBeVisible();
 
-        await productos.first().click();
+        const cantidadProductos = await productos.count();
 
-        await page.waitForLoadState('domcontentloaded');
+        expect(cantidadProductos).toBeGreaterThan(0);
+
+        // Esperar la navegación al detalle del producto
+        await Promise.all([
+            page.waitForURL(/prod\.html/),
+            productos.first().click()
+        ]);
+
+        await expect(page.getByText('Add to cart', { exact: true }))
+            .toBeVisible();
 
         await page.screenshot({
             path: './evidencias/03-detalle-producto.png',
             fullPage: true
         });
-
-        await expect(page.getByText('Add to cart')).toBeVisible();
     });
 
     test('Capturar el navbar y el footer por separado', async ({ page }) => {
 
         await page.goto('https://www.demoblaze.com/');
 
+        // Captura del navbar
         const navbar = page.locator('#navbarExample');
+
+        await expect(navbar).toBeVisible();
 
         await navbar.screenshot({
             path: './evidencias/04-navbar.png'
         });
 
-        const footer = page.locator('.container-fluid').last();
+        // El footer de Demoblaze tiene el identificador fotcont
+        const footer = page.locator('#fotcont');
 
-        if (await footer.isVisible()) {
-            await footer.screenshot({
-                path: './evidencias/05-footer.png'
-            });
-        }
+        await footer.scrollIntoViewIfNeeded();
+
+        await expect(footer).toBeVisible();
+
+        await footer.screenshot({
+            path: './evidencias/05-footer.png'
+        });
     });
 
     test('Verificar tiempo de carga de la página', async ({ page }) => {
