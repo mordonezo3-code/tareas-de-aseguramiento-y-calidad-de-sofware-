@@ -5,7 +5,7 @@ test('La página carga correctamente', async ({ page }) => {
 
   await expect(page).toHaveTitle(/STORE/);
   await expect(page.locator('#navbarExample')).toBeVisible();
-});
+}); 
 
 test('El menú de categorías es visible', async ({ page }) => {
   await page.goto('/');

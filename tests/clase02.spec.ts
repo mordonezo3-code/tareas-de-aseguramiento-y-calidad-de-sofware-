@@ -90,7 +90,7 @@ test.describe('Pruebas de la Clase 02 - Navegación y Esperas en Demoblaze', () 
 
         const loadTime = Date.now() - startTime;
 
-        console.log(Tiempo de carga: ${loadTime} ms);
+        console.log(`Tiempo de carga: ${loadTime} ms`);
 
         expect(loadTime).toBeLessThan(10000);
     });
